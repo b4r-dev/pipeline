@@ -19,6 +19,7 @@ fmflow = "*"
 tqdm = "*"
 netcdf4 = "*"
 bokeh = "*"
+docopt = "*"
 
 [requires]
 python_version = "3.6.8"

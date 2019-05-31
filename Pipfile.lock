@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "70c53c8d5d98643d186289c70086baab5ca7f52afc9cbb4486d33b9bd679a5b6"
+            "sha256": "8c28c45e33a9997f91f341026332d41e16ff03d0f46fce6f2186d2f81004582d"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.6"
+            "python_version": "3.6.8"
         },
         "sources": [
             {
@@ -82,6 +82,13 @@
                 "sha256:cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"
             ],
             "version": "==0.10.0"
+        },
+        "docopt": {
+            "hashes": [
+                "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"
+            ],
+            "index": "pypi",
+            "version": "==0.6.2"
         },
         "fmflow": {
             "hashes": [
