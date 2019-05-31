@@ -40,6 +40,18 @@ def load_data_xffts(path_xffts, path_ant=None,
     P.coords['scanid'] = scanid
     P.coords['scantype'] = scantype
     P.coords['integtime'] = integtime
+
+    # add antenna info (if any)
+    if path_ant is not None:
+        freq = get_freq(path_ant, sideband)
+        x, y = get_coordinates(path_ant, coordsys)
+        x = x.interp_like(P)
+        y = y.interp_like(P)
+
+        P.coords['ch'] = freq
+        P.coords['x'] = x
+        P.coords['y'] = y
+
     return P
 
 
@@ -73,6 +85,28 @@ def get_freq(path_ant, sideband):
 
     return xr.DataArray(freq, dims=('ch',))
 
+
+def get_coordinates(path_ant, coordsys):
+    """Get coordinates with time as an xarray's DataArray."""
+    ds = load_netcdf(path_ant)
+
+    time = ds['Data.TelescopeBackend.TelTime'].values # unix time
+    time = np.array([datetime.utcfromtimestamp(t) for t in time])
+    time = time.astype('datetime64[ns]')
+    time = correct_outlier_time(time)
+
+    if coordsys == 'RADEC':
+        x = np.rad2deg(ds['Data.TelescopeBackend.SourceRaDes'].values)
+        y = np.rad2deg(ds['Data.TelescopeBackend.SourceDecDes'].values)
+    elif coordsys == 'AZEL':
+        x = np.rad2deg(ds['Data.TelescopeBackend.TelAzMap'].values)
+        y = np.rad2deg(ds['Data.TelescopeBackend.TelElMap'].values)
+    else:
+        raise ValueError(f'Invalid coordsys: {coordsys}')
+
+    x = xr.DataArray(x, coords={'t': time}, dims=('t',))
+    y = xr.DataArray(y, coords={'t': time}, dims=('t',))
+    return x, y
 
 
 def correct_outlier_time(time, sigma=3):
