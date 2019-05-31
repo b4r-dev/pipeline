@@ -71,6 +71,9 @@ def get_freq(path_ant, sideband):
     else:
         raise ValueError(f'Invalid sideband: {sideband}')
 
+    return xr.DataArray(freq, dims=('ch',))
+
+
 
 def correct_outlier_time(time, sigma=3):
     """Detect time outliers and correct them by interpololation."""
