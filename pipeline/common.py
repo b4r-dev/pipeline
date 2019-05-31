@@ -1,5 +1,5 @@
 # from standard library
-from pathlib import Path
+from copy import deepcopy
 
 # from dependent packages
 import numpy as np
@@ -14,30 +14,32 @@ LEN_TIMEFMT = 24
 
 
 # main functions
-def load_data_xffts(path):
+def load_data_xffts(path_xffts, path_ant=None,
+                    sideband='USB', coordsys='RADEC'):
     """Load XFFTS data as an xarray's DataArray."""
-    da = load_netcdf(path)
+    da = load_netcdf(path_xffts)
 
+    array = da['array']
+    scanid = da['scancount']
+    scantype = da['bufpos']
     time = da['date'].values
-    array = da['array'].values
-    scanid = da['scancount'].values
-    scantype = da['bufpos'].values
-    integtime = da['integtime'].values
+    integtime = da['integtime'] * 1e-6 # s
 
     # modify time
-    time = np.array([s[:LEN_TIMEFMT] for s in time])
+    time = np.array([t[:LEN_TIMEFMT] for t in time])
     time = time.astype('datetime64[ns]')
     time = correct_outlier_time(time)
+    time = xr.DataArray(time, dims=('t', ))
 
     # modify array
-    array /= integtime[:, np.newaxis]
+    array /= integtime
 
     # create DataArray
-    P = xr.DataArray(array, dims=('time', 'freq'))
-    P.coords['time'] = 'time', time
-    P.coords['scanid'] = 'time', scanid
-    P.coords['scantype'] = 'time', scantype
-    P.coords['integtime'] = 'time', integtime
+    P = xr.DataArray(array, dims=('t', 'ch'))
+    P.coords['t'] = time
+    P.coords['scanid'] = scanid
+    P.coords['scantype'] = scantype
+    P.coords['integtime'] = integtime
     return P
 
 
