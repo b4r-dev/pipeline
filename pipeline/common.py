@@ -46,7 +46,7 @@ def load_netcdf(path, copy=True, unwrap=True):
     """Load netCDF as an xarray's Dataset or DataArray."""
     with xr.open_dataset(path) as ds:
         if copy:
-            ds = ds.copy()
+            ds = deepcopy(ds)
 
         if len(ds)==1 and unwrap:
             key = list(ds)[0]
@@ -56,15 +56,16 @@ def load_netcdf(path, copy=True, unwrap=True):
 
 
 def get_freq(path_ant, sideband):
-    """Get an array of observed frequency in GHz."""
-    with xr.open_dataset(path_ant) as ds:
+    """Get observed frequency in GHz as an xarray's DataArray."""
+    ds = load_netcdf(path_ant)
+
         LO_1 = ds['Header.B4r.LineFreq'].values[0] # GHz
         LO_2 = ds['Header.B4r.If2Freq'].values[0] # GHz
 
     if sideband == 'USB':
-        return LO_1+LO_2 + np.arange(0, -BANDWIDTH, -CHANWIDTH)
+        freq =  LO_1+LO_2 + np.arange(0, -BANDWIDTH, -CHANWIDTH)
     elif sideband == 'LSB':
-        return LO_1-LO_2 + np.arange(0, +BANDWIDTH, +CHANWIDTH)
+        freq = LO_1-LO_2 + np.arange(0, +BANDWIDTH, +CHANWIDTH)
     else:
         raise ValueError(f'Invalid sideband: {sideband}')
 
@@ -77,12 +78,15 @@ def correct_outlier_time(time, sigma=3):
     from astropy.modeling.fitting import FittingWithOutlierRemoval
     from astropy.stats import sigma_clip
 
+    # create fitting model
     model = Polynomial1D(1)
     fitter = LinearLSQFitter()
     fitter = FittingWithOutlierRemoval(fitter, sigma_clip, sigma=sigma)
 
+    # apply model and get mask
     time = pd.Series(time.astype('int64'))
     model, mask = fitter(model, np.arange(len(time)), time)
 
+    # apply mask and interpolation
     time[mask] = np.nan
     return pd.to_datetime(time.interpolate(), unit='ns')
