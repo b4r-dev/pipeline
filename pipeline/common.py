@@ -103,8 +103,8 @@ def get_freq(path_ant, sideband):
     """Get observed frequency in GHz as an xarray's DataArray."""
     ds = load_netcdf(path_ant)
 
-        LO_1 = ds['Header.B4r.LineFreq'].values[0] # GHz
-        LO_2 = ds['Header.B4r.If2Freq'].values[0] # GHz
+    LO_1 = ds['Header.B4r.LineFreq'].values[0] # GHz
+    LO_2 = ds['Header.B4r.If2Freq'].values[0] # GHz
 
     if sideband == 'USB':
         freq =  LO_1+LO_2 + np.arange(0, -BANDWIDTH, -CHANWIDTH)
