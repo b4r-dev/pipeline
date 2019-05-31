@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "*"
+jupyter = "*"
+jupyterthemes = "*"
+
+[packages]
+numpy = "*"
+scipy = "*"
+astropy = "*"
+matplotlib = "*"
+xarray = "*"
+pandas = "*"
+fmflow = "*"
+tqdm = "*"
+netcdf4 = "*"
+bokeh = "*"
+
+[requires]
+python_version = "3.6.8"
+
+[scripts]
+jupyter = "jupyter notebook"
