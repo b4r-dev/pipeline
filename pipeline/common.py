@@ -3,6 +3,7 @@ from pathlib import Path
 
 # from dependent packages
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 # module constants
