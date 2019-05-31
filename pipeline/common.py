@@ -1,3 +1,6 @@
+__all__ = ['load_data_xffts',
+           'calibrate_intensity']
+
 # from standard library
 from copy import deepcopy
 from datetime import datetime
@@ -75,6 +78,7 @@ def calibrate_intensity(P_sci, P_cal, T_amb=273, progress=True):
         P_off_trail = P_off[P_off.scanid==on_id+1]
         P_off_ = xr.concat([P_off_lead, P_off_trail], 't').mean('t')
 
+        # calibrate intensity and calculate Tsys
         T_cal_ = T_amb * (P_on_-P_off_) / (P_r-P_off_)
         T_cal[T_cal.scanid==on_id] = T_cal_
 
