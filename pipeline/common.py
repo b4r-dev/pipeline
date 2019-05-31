@@ -55,6 +55,34 @@ def load_data_xffts(path_xffts, path_ant=None,
     return P
 
 
+def calibrate_intensity(P_sci, P_cal, T_amb=273, progress=True):
+    """Calibrate intensity by chopper wheel calibration."""
+    P_on = P_sci[P_sci.scantype=='ON']
+    P_off = P_sci[P_sci.scantype=='REF']
+    P_r = P_cal[P_cal.scanid==0].mean('t')
+
+    T_cal = xr.zeros_like(P_on)
+    T_sys = xr.zeros_like(P_on)
+
+    for on_id in tqdm(np.unique(P_on.scanid), disable=not progress):
+        # ON array of single scan
+        P_on_ = P_on[P_on.scanid==on_id]
+
+        # OFF arrays between ON array
+        P_off_lead = P_off[P_off.scanid==on_id-1]
+        P_off_trail = P_off[P_off.scanid==on_id+1]
+        P_off_ = xr.concat([P_off_lead, P_off_trail], 't').mean('t')
+
+        T_cal_ = T_amb * (P_on_-P_off_) / (P_r-P_off_)
+        T_cal[T_cal.scanid==on_id] = T_cal_
+
+        T_sys_ = T_amb / (P_r/P_off_-1)
+        T_sys[T_sys.scanid==on_id] = T_sys_
+
+    T_cal.coords['T_sys'] = T_sys
+    return T_cal
+
+
 # utility functions
 def load_netcdf(path, copy=True, unwrap=True):
     """Load netCDF as an xarray's Dataset or DataArray."""
