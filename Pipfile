@@ -21,6 +21,7 @@ matplotlib = "*"
 fmflow = "*"
 netcdf4 = "*"
 tqdm = "*"
+scikit-learn = "*"
 
 [requires]
 python_version = "3.7"
