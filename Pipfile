@@ -6,23 +6,18 @@ verify_ssl = true
 [dev-packages]
 ipython = "*"
 jupyter = "*"
-jupyterthemes = "*"
+jupyterlab = "*"
 
 [packages]
 numpy = "*"
+pandas = "*"
+xarray = "*"
 scipy = "*"
 astropy = "*"
 matplotlib = "*"
-xarray = "*"
-pandas = "*"
 fmflow = "*"
-tqdm = "*"
 netcdf4 = "*"
-bokeh = "*"
-docopt = "*"
+tqdm = "*"
 
 [requires]
-python_version = "3.6.8"
-
-[scripts]
-jupyter = "jupyter notebook"
+python_version = "3.7"
