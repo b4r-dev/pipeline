@@ -11,6 +11,7 @@ fi
 
 # set environment valiables
 cat << EOS >> .env
+PYTHONPATH=${PWD}
 PYTHONSTARTUP=${PWD}/startup.py
 EOS
 
