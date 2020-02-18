@@ -1,9 +1,8 @@
-__all__ = ['despike_outliers']
+__all__ = ["despike_outliers"]
 
 
-# from dependent packages
+# dependent packages
 import numpy as np
-import xarray as xr
 
 
 # main functions
