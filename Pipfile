@@ -7,6 +7,9 @@ verify_ssl = true
 ipython = "*"
 jupyter = "*"
 jupyterlab = "*"
+flake8 = "*"
+pytest = "*"
+black = "*"
 
 [packages]
 numpy = "*"
@@ -21,3 +24,6 @@ tqdm = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
