@@ -45,6 +45,7 @@ def estimate_baseline(T_cal, order=1, weight=None):
     freq = T_cal.ch - T_cal.ch.mean()
     n_freq, n_poly = len(freq), order + 1
 
+    # make design matrix
     X = np.zeros([n_freq, n_poly])
 
     for i in range(n_poly):
@@ -53,9 +54,11 @@ def estimate_baseline(T_cal, order=1, weight=None):
 
     y = T_cal.values.T
 
+    # estimate coeffs by solving linear regression problem
     model = LinearRegression(fit_intercept=False)
     model.fit(X, y, sample_weight=weight or 1.0)
 
+    # estimate baseline
     T_base = xr.full_like(T_cal, model.coef_ @ X.T)
 
     for i in range(n_poly):
