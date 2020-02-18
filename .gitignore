@@ -1,7 +1,4 @@
 # User-defined
-.ipython
-.jupyter
-.matplotlib
 .vscode
 
 # Byte-compiled / optimized / DLL files
