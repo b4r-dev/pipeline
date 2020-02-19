@@ -10,8 +10,8 @@ from sklearn.linear_model import LinearRegression
 # main functions
 def despike_outliers(T_cal, threshold=100):
     """Detect outliers and replace them by noise."""
-    where = np.abs(T_cal) > threshold
-    std = T_cal.std().values
+    where = (np.abs(T_cal) > threshold) | np.isnan(T_cal)
+    std = T_cal.values[~where].std()
     noise = np.random.normal(scale=std, size=int(where.sum()))
 
     T_cal_new = T_cal.copy()
