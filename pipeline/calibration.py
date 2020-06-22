@@ -145,7 +145,7 @@ def get_coordinates(path_ant, coordsys):
     return x, y
 
 
-def correct_outlier_time(time, sigma=3):
+def correct_outlier_time(time, sigma=5):
     """Detect time outliers and correct them by interpololation."""
     # lazy import of astropy
     from astropy.modeling.models import Polynomial1D
