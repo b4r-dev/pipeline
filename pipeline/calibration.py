@@ -46,13 +46,14 @@ def load_data_xffts(path_xffts, path_ant=None, sideband="USB", coordsys="RADEC")
     P.coords["scanid"] = scanid
     P.coords["scantype"] = scantype
     P.coords["integtime"] = integtime
+    P = P[~P.t.isnull()]
 
     # add antenna info (if any)
     if path_ant is not None:
         freq = get_freq(path_ant, sideband)
         x, y = get_coordinates(path_ant, coordsys)
-        x = x.interp_like(P)
-        y = y.interp_like(P)
+        x = x[~x.t.isnull()].interp_like(P)
+        y = y[~y.t.isnull()].interp_like(P)
 
         P.coords["ch"] = freq
         P.coords["x"] = x
