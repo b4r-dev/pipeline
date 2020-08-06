@@ -62,7 +62,7 @@ def estimate_baseline(T_cal, order=1, weight=None):
     model.fit(X, y, sample_weight=weight)
 
     # estimate baseline
-    T_base = xr.full_like(T_cal, model.coef_ @ X.T)
+    T_base = xr.zeros_like(T_cal) + model.coef_ @ X.T
 
     for i in range(n_poly):
         T_base.coords[f"basis_{i}"] = "ch", X[:, i]
