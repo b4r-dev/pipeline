@@ -55,8 +55,11 @@ def estimate_baseline(T_cal, order=1, weight=None):
     y = T_cal.values.T
 
     # estimate coeffs by solving linear regression problem
+    if weight is None:
+        weight = 1.0
+
     model = LinearRegression(fit_intercept=False)
-    model.fit(X, y, sample_weight=weight or 1.0)
+    model.fit(X, y, sample_weight=weight)
 
     # estimate baseline
     T_base = xr.full_like(T_cal, model.coef_ @ X.T)
